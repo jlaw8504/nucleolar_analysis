@@ -106,7 +106,7 @@ for n = 1:size(gfp_files,1)
             %find the smaller of the two displacements
             displacement = min(min_disp);
             clear disp1 disp2 min_disp
-        elseif strcmpi(phase,'g1') == 1 && size(stats) == 1
+        elseif strcmpi(phase,'g1') == 1 && size(stats,1) == 1
             %find all the 1's in the binary mipbin2
             inds = find(mipbin2);
             %convert the linear index to a coordinate index

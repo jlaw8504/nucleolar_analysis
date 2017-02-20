@@ -52,7 +52,7 @@ im_bin = mip_sub > thresh;
         stats = regionprops(im_bin,'Centroid');
         i = i + 1;
         if limit == i
-            disp('Cannot find two objects');
+            disp('Cannot find correct number of objects');
             break;
         end
     end
