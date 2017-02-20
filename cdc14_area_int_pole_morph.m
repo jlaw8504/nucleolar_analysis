@@ -1,4 +1,4 @@
-function [miparray, mipsub_int, mipsub_max,angle_mat,displacement_mat] = cdc14_area_int_pole_morph(directory)
+function [miparray, mipsub_int, mipsub_max,angle_mat,displacement_mat,morph_cell] = cdc14_area_int_pole_morph(directory, phase)
 %% Loop through all GFP files
 returndir = pwd;
 cd(directory);
@@ -68,7 +68,6 @@ for n = 1:size(gfp_files,1)
     if isempty(str)
         str = 'Y';
     end
-    close;
     
     %% find the area of both binaries
     miparea = regionprops(mipbin2,'area');
@@ -78,24 +77,48 @@ for n = 1:size(gfp_files,1)
     %% Find the orienation of mipbin2
     mipangle = regionprops(mipbin2,'Orientation');
     if strcmpi(str,'Y') == 1
+        %prompt user to define shape
+        prompt_morph = 'Classify shape [arch/bar/2spots/other]:';
+        str_morph = input(prompt_morph,'s');
+        morph_cell{mipcount,1} = str_morph;
+        morph_cell{mipcount,2} = mip;
+        close;
         %% Run pole angle program
-        [angle,stats] = pole_angles(rfp_files(n).name);
+        [angle,stats] = pole_angles(rfp_files(n).name, phase);
         %% Find smallest dist from binary to pole centroid
-        %only do this if angle is not nan
+        %only do this if angle is not nan, meaning the funciton
+        %pole_angle.m was able to find two objects
         if isnan(angle) == 0
-            disp('testing');
+            %find all the 1's in the binary mipbin2
             inds = find(mipbin2);
+            %convert the linear index to a coordinate index
             [I,J] = ind2sub(size(mipbin2),inds);
             coords = [I,J];
+            %parse the centroid information from the two poles
             disp1 = coords - stats(1).Centroid;
             disp2 = coords - stats(2).Centroid;
+            %find the minimum distance of the rDNA binary to each of the
+            %centroid binaries
             min_disp(1)= min(arrayfun(@(x) norm(disp1(x,:)),1:size(disp1,1)));
             min_disp(2)= min(arrayfun(@(x) norm(disp2(x,:)),1:size(disp2,1)));
+            %find the smaller of the two displacements
             displacement = min(min_disp);
+        elseif strcmpi(phase,'g1') == 1
+            %find all the 1's in the binary mipbin2
+            inds = find(mipbin2);
+            %convert the linear index to a coordinate index
+            [I,J] = ind2sub(size(mipbin2),inds);
+            coords = [I,J];
+            %parse the centroid information from the single pole
+            disp = coords - stats(1).Centroid;
+            displacement= min(arrayfun(@(x) norm(disp(x,:)),1:size(disp,1)));
         else
             displacement = nan;
         end
+        %put the measurements into an array indexed by the mipcount counter
         displacement_mat(mipcount,1) = displacement;
+        %Angle of the poles is in the first column
+        %Angle of the spherical fit of the rDNA is in the second column
         angle_mat(mipcount,1) = rad2deg(angle);
         angle_mat(mipcount,2) = mipangle.Orientation;
         miparray(mipcount,1) = miparea;
