@@ -95,14 +95,17 @@ for n = 1:size(gfp_files,1)
             [I,J] = ind2sub(size(mipbin2),inds);
             coords = [I,J];
             %parse the centroid information from the two poles
-            disp1 = coords - stats(1).Centroid;
-            disp2 = coords - stats(2).Centroid;
+            disp1(:,1) = coords(:,1) - stats(1).Centroid(:,1);
+            disp1(:,2) = coords(:,2) - stats(1).Centroid(:,2);
+            disp2(:,1) = coords(:,1) - stats(2).Centroid(:,1);
+            disp2(:,2) = coords(:,2) - stats(2).Centroid(:,2);
             %find the minimum distance of the rDNA binary to each of the
             %centroid binaries
             min_disp(1)= min(arrayfun(@(x) norm(disp1(x,:)),1:size(disp1,1)));
             min_disp(2)= min(arrayfun(@(x) norm(disp2(x,:)),1:size(disp2,1)));
             %find the smaller of the two displacements
             displacement = min(min_disp);
+            clear disp1 disp2 min_disp
         elseif strcmpi(phase,'g1') == 1
             %find all the 1's in the binary mipbin2
             inds = find(mipbin2);
@@ -110,13 +113,16 @@ for n = 1:size(gfp_files,1)
             [I,J] = ind2sub(size(mipbin2),inds);
             coords = [I,J];
             %parse the centroid information from the single pole
-            disp = coords - stats(1).Centroid;
+            disp(:,1) = coords(:,1) - stats(1).Centroid(:,1);
+            disp(:,2) = coords(:,2) - stats(1).Centroid(:,2);
             displacement= min(arrayfun(@(x) norm(disp(x,:)),1:size(disp,1)));
+            clear disp
         else
             displacement = nan;
         end
         %put the measurements into an array indexed by the mipcount counter
         displacement_mat(mipcount,1) = displacement;
+        clear displacement
         %Angle of the poles is in the first column
         %Angle of the spherical fit of the rDNA is in the second column
         angle_mat(mipcount,1) = rad2deg(angle);
@@ -133,9 +139,9 @@ for n = 1:size(gfp_files,1)
         truncfile = filename(1:(end-7));
         RFP = strcat(truncfile,'RFP.tif');
         trans = strcat(truncfile,'trans.tif');
-        copyfile(RFP,strcat('.\selected\',RFP));
+        copyfile(RFP,strcat('.',filesep,'selected',filesep,RFP));
         %         copyfile(trans,strcat('.\selected\',trans))
-        copyfile(filename,strcat('.\selected\',filename));
+        copyfile(filename,strcat('.',filesep,'selected',filesep,filename));
     else
         display('Discarding...');
     end
