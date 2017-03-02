@@ -10,9 +10,9 @@ if ispc == 1
     brn1d9_intact_24c.dir = 'Z:\Alyssa\Split rDNA and WT with brn1-9\At 24\Background with brn1-9\Images\Selected G1 Cells';
     brn1d9_intact_37c.dir = 'Z:\Alyssa\Split rDNA and WT with brn1-9\At 37\Background with brn1-9\G1 Selected Regions\selected';
 else
-    wt_intact.dir
-    brn1d9_intact_24c.dir
-    brn1d9_intact_37c.dir
+    wt_intact.dir = '/Volumes/BloomLab/Alyssa/Split rDNA and WT Selected Images for Caitlin/WT';
+    brn1d9_intact_24c.dir = '/Volumes/BloomLab/Alyssa/Split rDNA and WT with brn1-9/At 24/Background with brn1-9/Images/Selected G1 Cells';
+    brn1d9_intact_37c.dir = '/Volumes/BloomLab/Alyssa/Split rDNA and WT with brn1-9/At 37/Background with brn1-9/G1 Selected Regions/selected';
 end
 
 %% Intact rDNA loci, G1 cells
