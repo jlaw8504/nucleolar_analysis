@@ -1,0 +1,4 @@
+%This script uses the mdx_multi_thresh.m to measure the intensity profile
+%of cdc14-GFP images.  Images are scaled such that the min pixel of the
+%maximum intensity projection is set 0 and the brightest pixel is set to 1.
+%The original 
