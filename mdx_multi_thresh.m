@@ -1,4 +1,4 @@
-function [mean_array, thresh_array, fraction_array] = mdx_multi_thresh(directory)
+function [mean_array, thresh_array, variance_array, fraction_array] = mdx_multi_thresh(directory)
 %% Read in image
 cd(directory);
 gfp_files = dir('*GFP.tif');
@@ -13,9 +13,9 @@ for n = 1:size(gfp_files,1)
     mip = max(imdbl,[],3);
     %% Normalize image
     %set min pixel to zero
-    norm_mip = mip - min(mip(:));    
+    sub_mip = mip - min(mip(:));    
     %set max pixel to one
-    norm_mip = norm_mip/max(mip(:));
+    norm_mip = sub_mip/max(sub_mip(:));
     %% Calc %pixel below threshold at multiple thresholds
     %thresh array
     thresh_array = 0:0.01:1;
@@ -23,11 +23,13 @@ for n = 1:size(gfp_files,1)
         %get binary image BELOW threshold
         im_bin = norm_mip < thresh_array(i);
         fraction_array(n,i) = sum(im_bin(:))/length(im_bin(:)); 
+        %calc variance of image ABOVE OR EQUAL to threshold
+        variance_array(n,i) = var(norm_mip(norm_mip >= thresh_array(i)));
     end
 end
 %calculate mean of fraction_array by row
 mean_array = mean(fraction_array);
-%plot the mean_array vs thresh_array
-plot(thresh_array, mean_array);
-xlabel('Threshold of Intensity');
-ylabel('Fraction Pixels < Threshold');
+% %plot the mean_array vs thresh_array
+% plot(thresh_array, mean_array);
+% xlabel('Threshold of Intensity');
+% ylabel('Fraction Pixels < Threshold');
