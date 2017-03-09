@@ -1,4 +1,4 @@
-function [mean_array, thresh_array, variance_array, fraction_array] = mdx_multi_thresh(directory)
+function [mean_array, thresh_array, variance_array, fraction_array, area_array] = mdx_multi_thresh(directory)
 %% Read in image
 cd(directory);
 gfp_files = dir('*GFP.tif');
@@ -25,6 +25,8 @@ for n = 1:size(gfp_files,1)
         fraction_array(n,i) = sum(im_bin(:))/length(im_bin(:)); 
         %calc variance of image ABOVE OR EQUAL to threshold
         variance_array(n,i) = var(norm_mip(norm_mip >= thresh_array(i)));
+        %calc area in pixels of image ABOVE or EQUAL to threshold
+        area_array(n,i) = length(norm_mip(norm_mip >= thresh_array(i)))/length(norm_mip(:));
     end
 end
 %calculate mean of fraction_array by row

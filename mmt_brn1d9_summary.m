@@ -16,31 +16,43 @@ else
 end
 
 %% Intact rDNA loci, G1 cells
-[wt_intact.mean, wt_intact.thresh, wt_intact.var, wt_intact.fraction] = mdx_multi_thresh(wt_intact.dir);
-[brn1d9_intact_24c.mean, brn1d9_intact_24c.thresh, brn1d9_intact_24c.var, brn1d9_intact_24c.fraction] = mdx_multi_thresh(brn1d9_intact_24c.dir);
-[brn1d9_intact_37c.mean, brn1d9_intact_37c.thresh, brn1d9_intact_37c.var, brn1d9_intact_37c.fraction] = mdx_multi_thresh(brn1d9_intact_37c.dir);
+[wt_intact.mean, wt_intact.thresh, wt_intact.var, wt_intact.fraction, wt_intact.area] = mdx_multi_thresh(wt_intact.dir);
+[brn1d9_intact_24c.mean, brn1d9_intact_24c.thresh, brn1d9_intact_24c.var, brn1d9_intact_24c.fraction, brn1d9_intact_24c.area] = mdx_multi_thresh(brn1d9_intact_24c.dir);
+[brn1d9_intact_37c.mean, brn1d9_intact_37c.thresh, brn1d9_intact_37c.var, brn1d9_intact_37c.fraction, brn1d9_intact_37c.area] = mdx_multi_thresh(brn1d9_intact_37c.dir);
 
-%% Plot the mean fraction vs threshold values
+% %% Plot the mean fraction vs threshold values
+% figure;
+% plot(wt_intact.thresh,wt_intact.mean);
+% hold on;
+% plot(brn1d9_intact_24c.thresh,brn1d9_intact_24c.mean);
+% plot(brn1d9_intact_37c.thresh,brn1d9_intact_37c.mean);
+% hold off;
+% xlabel('Threshold of Intensity');
+% ylabel('Mean Fraction Pixels < Threshold');
+% legend('WT','brn1-9 24 C', 'brn1-9 37 C');
+% title('G1, Intact rDNA');
+% 
+% %% Plot the mean variance of pixel above thresh vs threshold values
+% figure;
+% plot(wt_intact.thresh,mean(wt_intact.var,'omitnan'));
+% hold on;
+% plot(brn1d9_intact_24c.thresh,mean(brn1d9_intact_24c.var,'omitnan'));
+% plot(brn1d9_intact_37c.thresh,mean(brn1d9_intact_37c.var,'omitnan'));
+% hold off;
+% xlabel('Threshold of Intensity');
+% ylabel('Variance of pixels >= threshold');
+% legend('WT','brn1-9 24 C', 'brn1-9 37 C');
+% title('G1, Intact rDNA');
+
+%% Plot the mean area vs threshold values with error bars
 figure;
-plot(wt_intact.thresh,wt_intact.mean);
+errorbar(wt_intact.thresh,mean(wt_intact.area),std(wt_intact.area)/sqrt(size(wt_intact.area,1)),'-o')
 hold on;
-plot(brn1d9_intact_24c.thresh,brn1d9_intact_24c.mean);
-plot(brn1d9_intact_37c.thresh,brn1d9_intact_37c.mean);
+errorbar(brn1d9_intact_24c.thresh,mean(brn1d9_intact_24c.area),std(brn1d9_intact_24c.area)/sqrt(size(brn1d9_intact_24c.area,1)),'-o')
+errorbar(brn1d9_intact_37c.thresh,mean(brn1d9_intact_37c.area),std(brn1d9_intact_37c.area)/sqrt(size(brn1d9_intact_37c.area,1)),'-o')
 hold off;
 xlabel('Threshold of Intensity');
-ylabel('Mean Fraction Pixels < Threshold');
-legend('WT','brn1-9 24 C', 'brn1-9 37 C');
-title('G1, Intact rDNA');
-
-%% Plot the mean variance of pixel above thresh vs threshold values
-figure;
-plot(wt_intact.thresh,mean(wt_intact.var,'omitnan'));
-hold on;
-plot(brn1d9_intact_24c.thresh,mean(brn1d9_intact_24c.var,'omitnan'));
-plot(brn1d9_intact_37c.thresh,mean(brn1d9_intact_37c.var,'omitnan'));
-hold off;
-xlabel('Threshold of Intensity');
-ylabel('Variance of pixels >= threshold');
+ylabel('Mean Normalized Area');
 legend('WT','brn1-9 24 C', 'brn1-9 37 C');
 title('G1, Intact rDNA');
 
